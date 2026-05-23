@@ -165,42 +165,16 @@ function getPR(exerciseId)
               handleAddSet={handleAddSet}
             />
 
-            {/* DISPLAY SETS */}
-
-            {/* TODAY'S WORKOUT */}
-
             {/* PERSONAL RECORDS */}
             <PersonalRecordList
               exercises={exercises}
               getPR={getPR}
             />
 
-<h2>Today's Workout</h2>
-
-{sets.length === 0 ? (
-
-    <p>No sets logged yet.</p>
-
-) : (
-
-    sets.map((set) => (
-
-        <div key={set.id}>
-
-            <p>
-                {getExerciseName(set.exerciseId)}
-                {" - "}
-                {set.weight} lbs x {set.reps} reps
-                {" | "}
-                {set.date}
-            </p>
-
-        </div>
-
-    ))
-
-)}
-
+            <WorkoutList
+              sets={sets}
+              getExerciseName={getExerciseName}
+            />\
         </div>
     );
 }
