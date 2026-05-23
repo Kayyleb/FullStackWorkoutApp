@@ -1,9 +1,11 @@
 // IMPORTS
 const express = require("express");
 const cors = require("cors");
+const { PrismaClient } = require("@prisma/client"); // connect to prisma
 
 // CREATE EXPRESS APP
 const app = express();
+const prisma = new PrismaClient();
 
 // SETTINGS
 const PORT = 3000;
@@ -12,87 +14,63 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// TEST ROUTE
 
-// TEMPORARY DATA
-const exercises = [
-    {
-        id: 1,
-        name: "Bench Press",
-        muscle: "Chest"
-    },
-
-    {
-        id: 2,
-        name: "Squat",
-        muscle: "Legs"
-    },
-
-    {
-        id: 3,
-        name: "Deadlift",
-        muscle: "Back"
-    }
-];
-
-const sets = [];
-
-
-// ROUTES
-// Home route
-app.get("/", (req, res) => 
-{
+app.get("/", (req, res) => {
     res.send("Workout API is running");
 });
 
 
-// GET EXERCISES ROUTE
+// GET ALL EXERCISES
 
-//lets the user add their own exercises
-app.post("/exercises" , (req, res) => 
-{
-    const newExercise = 
-    {
-        id: exercises.length + 1,
-        name: req.body.name,
-        muscle: req.body.muscle
-    };
+app.get("/exercises", async (req, res) => {
+    const exercises = await prisma.exercise.findMany();
 
-    exercises.push(newExercise); // add new exercise to temp array
-
-    res.status(201).json(newExercise); // send new exercise to react backend
-});
-
-// will grab exercises from the db
-app.get("/exercises", (req, res) => {
-
-    // send exercise array as JSON
     res.json(exercises);
-
 });
 
-// get all sets
-app.get("/sets", (req,res) => 
-{
+
+// ADD EXERCISE
+
+app.post("/exercises", async (req, res) => {
+    const newExercise = await prisma.exercise.create({
+        data: {
+            name: req.body.name,
+            muscle: req.body.muscle
+        }
+    });
+
+    res.status(201).json(newExercise);
+});
+
+
+// GET ALL SETS
+
+app.get("/sets", async (req, res) => {
+    const sets = await prisma.workoutSet.findMany();
+
     res.json(sets);
 });
 
-app.post("/sets", (req,res) => 
-{
-    const newSet = 
-    {
-        id: sets.length +1,
-        exerciseId: req.body.exerciseId,
-        weight: req.body.weight,
-        reps: req.body.reps,
-        date: new Date().toLocaleDateString()
-    };
-    sets.push(newSet);
+
+// ADD SET
+
+app.post("/sets", async (req, res) => {
+    const newSet = await prisma.workoutSet.create({
+        data: {
+            exerciseId: req.body.exerciseId,
+            weight: req.body.weight,
+            reps: req.body.reps,
+            date: new Date().toLocaleDateString()
+        }
+    });
+
     res.status(201).json(newSet);
 });
 
+
 // START SERVER
+
 app.listen(PORT, () => {
-
     console.log(`Server running on http://localhost:${PORT}`);
-
 });
