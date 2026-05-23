@@ -1,32 +1,20 @@
 // IMPORTS
-
 const express = require("express");
 const cors = require("cors");
 
-
 // CREATE EXPRESS APP
-
 const app = express();
 
-
 // SETTINGS
-
 const PORT = 3000;
 
-
 // MIDDLEWARE
-
 app.use(cors());
 app.use(express.json());
 
 
 // TEMPORARY DATA
-
-// This is fake data for now.
-// Later this will come from SQLite.
-
 const exercises = [
-
     {
         id: 1,
         name: "Bench Press",
@@ -44,27 +32,22 @@ const exercises = [
         name: "Deadlift",
         muscle: "Back"
     }
-
 ];
+
+const sets = [];
 
 
 // ROUTES
-
 // Home route
-app.get("/", (req, res) => {
-
+app.get("/", (req, res) => 
+{
     res.send("Workout API is running");
-
 });
 
 
 // GET EXERCISES ROUTE
 
-// When frontend requests:
-// http://localhost:3000/exercises
-//
-// this route runs
-
+//lets the user add their own exercises
 app.post("/exercises" , (req, res) => 
 {
     const newExercise = 
@@ -79,6 +62,7 @@ app.post("/exercises" , (req, res) =>
     res.status(201).json(newExercise); // send new exercise to react backend
 });
 
+// will grab exercises from the db
 app.get("/exercises", (req, res) => {
 
     // send exercise array as JSON
@@ -86,9 +70,27 @@ app.get("/exercises", (req, res) => {
 
 });
 
+// get all sets
+app.get("/sets", (req,res) => 
+{
+    res.json(sets);
+});
+
+app.post("/sets", (req,res) => 
+{
+    const newSet = 
+    {
+        id: sets.length +1,
+        exerciseId: req.body.exerciseId,
+        weight: req.body.weight,
+        reps: req.body.reps,
+        date: new Date().toLocaleDateString()
+    };
+    sets.push(newSet);
+    res.status(201).json(newSet);
+});
 
 // START SERVER
-
 app.listen(PORT, () => {
 
     console.log(`Server running on http://localhost:${PORT}`);
