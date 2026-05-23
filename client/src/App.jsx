@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import ExerciseForm from "./components/ExerciseForm";
+import PersonalRecordList from "./components/PersonalRecordList";
+import SetForm from "./components/SetForm";
+import WorkoutList from "./components/WorkoutList";
 
 function App()
 {
@@ -140,85 +144,26 @@ function getPR(exerciseId)
 
             <h1>Workout Tracker</h1>
 
-
             {/* ADD EXERCISE FORM */}
-
-            <h2>Add Exercise</h2>
-
-            <form onSubmit={handleAddExercise}>
-
-                <input
-                    type="text"
-                    placeholder="Exercise name"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                />
-
-                <input
-                    type="text"
-                    placeholder="Muscle group"
-                    value={muscle}
-                    onChange={(event) => setMuscle(event.target.value)}
-                />
-
-                <button type="submit">
-                    Add Exercise
-                </button>
-
-            </form>
-
+            <ExerciseForm
+              name={name}
+              muscle={muscle}
+              setName={setName}
+              setMuscle={setMuscle}
+              handleAddExercise={handleAddExercise}
+            />
 
             {/* LOG SET FORM */}
-
-            <h2>Log Set</h2>
-
-            <form onSubmit={handleAddSet}>
-
-                <select
-                    value={selectedExercise}
-                    onChange={(event) =>
-                        setSelectedExercise(event.target.value)
-                    }
-                >
-
-                    <option value="">
-                        Select Exercise
-                    </option>
-
-                    {exercises.map((exercise) => (
-
-                        <option
-                            key={exercise.id}
-                            value={exercise.id}
-                        >
-                            {exercise.name}
-                        </option>
-
-                    ))}
-
-                </select>
-
-
-                <input
-                    type="number"
-                    placeholder="Weight"
-                    value={weight}
-                    onChange={(event) => setWeight(event.target.value)}
-                />
-
-                <input
-                    type="number"
-                    placeholder="Reps"
-                    value={reps}
-                    onChange={(event) => setReps(event.target.value)}
-                />
-
-                <button type="submit">
-                    Log Set
-                </button>
-
-            </form>
-
+            <SetForm
+              exercises={exercises}
+              selectedExercise={selectedExercise}
+              setSelectedExercise={setSelectedExercise}
+              weight={weight}
+              setWeight={setWeight}
+              reps={reps}
+              setReps={setReps}
+              handleAddSet={handleAddSet}
+            />
 
             {/* DISPLAY SETS */}
 
