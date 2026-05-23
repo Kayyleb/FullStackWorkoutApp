@@ -169,25 +169,11 @@ function getPR(exerciseId)
 
             {/* TODAY'S WORKOUT */}
 
-{/* PERSONAL RECORDS */}
-
-<h2>Personal Records</h2>
-
-{exercises.map((exercise) => (
-
-    <div key={exercise.id}>
-
-        <p>
-
-            {exercise.name}
-            {" - "}
-            {getPR(exercise.id)} lbs
-
-        </p>
-
-    </div>
-
-))}
+            {/* PERSONAL RECORDS */}
+            <PersonalRecordList
+              exercises={exercises}
+              getPR={getPR}
+            />
 
 <h2>Today's Workout</h2>
 
