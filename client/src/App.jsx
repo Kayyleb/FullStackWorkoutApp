@@ -109,6 +109,31 @@ function App()
         return exercise ? exercise.name : "Unknown";
     }
 
+    // FIND PR FOR AN EXERCISE
+
+function getPR(exerciseId)
+{
+    // get all sets for this exercise
+    const exerciseSets = sets.filter(
+        (set) => set.exerciseId === exerciseId
+    );
+
+    // no sets yet
+    if (exerciseSets.length === 0)
+    {
+        return 0;
+    }
+
+    /*
+        Math.max finds largest number.
+
+        map extracts only the weights.
+    */
+    return Math.max(
+        ...exerciseSets.map((set) => set.weight)
+    );
+}
+
 
     return (
         <div>
@@ -197,23 +222,53 @@ function App()
 
             {/* DISPLAY SETS */}
 
-            <h2>Logged Sets</h2>
+            {/* TODAY'S WORKOUT */}
 
-            {sets.map((set) => (
+{/* PERSONAL RECORDS */}
 
-                <div key={set.id}>
+<h2>Personal Records</h2>
 
-                    <p>
+{exercises.map((exercise) => (
 
-                        {getExerciseName(set.exerciseId)}
-                        {" - "}
-                        {set.weight} lbs x {set.reps} reps on {set.date}
+    <div key={exercise.id}>
 
-                    </p>
+        <p>
 
-                </div>
+            {exercise.name}
+            {" - "}
+            {getPR(exercise.id)} lbs
 
-            ))}
+        </p>
+
+    </div>
+
+))}
+
+<h2>Today's Workout</h2>
+
+{sets.length === 0 ? (
+
+    <p>No sets logged yet.</p>
+
+) : (
+
+    sets.map((set) => (
+
+        <div key={set.id}>
+
+            <p>
+                {getExerciseName(set.exerciseId)}
+                {" - "}
+                {set.weight} lbs x {set.reps} reps
+                {" | "}
+                {set.date}
+            </p>
+
+        </div>
+
+    ))
+
+)}
 
         </div>
     );
