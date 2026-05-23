@@ -2,95 +2,79 @@ import { useEffect, useState } from "react";
 
 function App()
 {
-    /*
-        useState creates state variables.
-
-        exercises:
-        stores the current exercise list
-
-        setExercises:
-        function used to update exercises
-    */
     const [exercises, setExercises] = useState([]);
 
+    // These store what the user types in the form
+    const [name, setName] = useState("");
+    const [muscle, setMuscle] = useState("");
 
-    /*
-        useEffect runs code when the component loads.
-
-        We use it here to fetch data
-        from our backend API.
-    */
     useEffect(() =>
     {
-
-        /*
-            fetch sends a GET request
-            to our Express backend.
-        */
         fetch("http://localhost:3000/exercises")
-
-            /*
-                Convert response into JSON.
-            */
             .then((response) => response.json())
-
-            /*
-                data now contains our exercise array.
-            */
-            .then((data) =>
-            {
-
-                console.log(data);
-
-                // store data into React state
-                setExercises(data);
-
-            })
-
-            /*
-                catch handles errors
-            */
-            .catch((error) =>
-            {
-
-                console.error("Error fetching exercises:", error);
-
-            });
-
+            .then((data) => setExercises(data))
+            .catch((error) => console.error("Error fetching exercises:", error));
     }, []);
 
+    function handleAddExercise(event)
+    {
+        // prevents page refresh
+        event.preventDefault();
 
-    /*
-        JSX is what React returns to display UI.
-    */
+        const newExercise = {
+            name: name,
+            muscle: muscle
+        };
+
+        fetch("http://localhost:3000/exercises", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newExercise)
+        })
+            .then((response) => response.json())
+            .then((savedExercise) =>
+            {
+                setExercises([...exercises, savedExercise]);
+
+                setName("");
+                setMuscle("");
+            })
+            .catch((error) => console.error("Error adding exercise:", error));
+    }
+
     return (
         <div>
-
             <h1>Workout Tracker</h1>
+
+            <h2>Add Exercise</h2>
+
+            <form onSubmit={handleAddExercise}>
+                <input
+                    type="text"
+                    placeholder="Exercise name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                />
+
+                <input
+                    type="text"
+                    placeholder="Muscle group"
+                    value={muscle}
+                    onChange={(event) => setMuscle(event.target.value)}
+                />
+
+                <button type="submit">Add Exercise</button>
+            </form>
 
             <h2>Exercises</h2>
 
-            {
-                /*
-                    map loops through the array
-                    and creates UI for each exercise.
-                */
-            }
-
-            {
-                exercises.map((exercise) => (
-
-                    <div key={exercise.id}>
-
-                        <p>
-                            {exercise.name} - {exercise.muscle}
-                        </p>
-
-                    </div>
-
-                ))
-            }
-
+            {exercises.map((exercise) => (
+                <div key={exercise.id}>
+                    <p>{exercise.name} - {exercise.muscle}</p>
+                </div>
+            ))}
         </div>
     );
 }

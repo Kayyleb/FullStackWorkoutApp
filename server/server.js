@@ -65,6 +65,20 @@ app.get("/", (req, res) => {
 //
 // this route runs
 
+app.post("/exercises" , (req, res) => 
+{
+    const newExercise = 
+    {
+        id: exercises.length + 1,
+        name: req.body.name,
+        muscle: req.body.muscle
+    };
+
+    exercises.push(newExercise); // add new exercise to temp array
+
+    res.status(201).json(newExercise); // send new exercise to react backend
+});
+
 app.get("/exercises", (req, res) => {
 
     // send exercise array as JSON
