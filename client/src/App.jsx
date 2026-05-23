@@ -174,7 +174,7 @@ function getPR(exerciseId)
             <WorkoutList
               sets={sets}
               getExerciseName={getExerciseName}
-            />\
+            />
         </div>
     );
 }

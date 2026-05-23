@@ -1,20 +1,18 @@
 function PersonalRecordList(props)
 {
-    return
-    (
+    return (
         <div>
             <h2>Personal Records</h2>
 
-                {exercises.map((exercise) => 
-                (
-                    <div key={exercise.id}>
-                        <p>
-                            {exercise.name}
-                            {" - "}
-                            {getPR(exercise.id)} lbs
-                        </p>
-                    </div>
-                ))} 
+            {props.exercises.map((exercise) => (
+                <div key={exercise.id}>
+                    <p>
+                        {exercise.name}
+                        {" - "}
+                        {props.getPR(exercise.id)} lbs
+                    </p>
+                </div>
+            ))}
         </div>
     );
 }
